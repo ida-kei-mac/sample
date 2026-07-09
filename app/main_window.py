@@ -22,7 +22,7 @@ DEPARTMENTS = ["開発部", "営業部", "管理部"]
 
 MSG_NAME_EMPTY = "利用者名を入力してください"
 MSG_NAME_TOO_LONG = "利用者名は50文字以内で入力してください"
-MSG_BUDGET_EMPTY = "予算上限を入力してください"
+MSG_BUDGET_EMPTY = "予算上限を入力して下さい"
 MSG_BUDGET_NOT_INT = "予算上限は整数で入力してください"
 MSG_BUDGET_OUT_OF_RANGE = "予算上限は1〜1,000,000の範囲で入力してください"
 MSG_ISSUED = "発行しました: {key}"
@@ -111,17 +111,18 @@ class MainWindow(QMainWindow):
             issued_at=_now_iso(),
         )
         self.status_label.setText(MSG_ISSUED.format(key=key))
+        self.budget_line_edit.setText("")
 
     @staticmethod
     def _validate(user_name: str, budget_text: str) -> str | None:
         if len(user_name) == 0:
             return MSG_NAME_EMPTY
-        if len(user_name) > 50:
+        if len(user_name) >= 50:
             return MSG_NAME_TOO_LONG
         if len(budget_text) == 0:
             return MSG_BUDGET_EMPTY
         if not _DIGITS_ONLY.match(budget_text):
             return MSG_BUDGET_NOT_INT
-        if not 1 <= int(budget_text) <= 1_000_000:
+        if not 1 <= int(budget_text) < 1_000_000:
             return MSG_BUDGET_OUT_OF_RANGE
         return None
